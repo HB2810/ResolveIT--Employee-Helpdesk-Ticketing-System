@@ -1,87 +1,123 @@
-# ResolveIT Employee Helpdesk Ticketing System
+# 🚀 ResolveIT — Employee Helpdesk Ticketing System
 
-A production-style internal IT helpdesk application built with Flask, SQLite, SQLAlchemy, Flask-Login, Flask-WTF, Bootstrap 5, and Werkzeug password hashing.
+<p align="center">
+  <img src="static/img/logo1.png" width="140" alt="ResolveIT Logo">
+</p>
 
-Employees can register, sign in, create support tickets, view their own tickets, and track ticket progress. Admin users can view all tickets, update ticket status, set priority, add remarks, close tickets, and monitor dashboard statistics.
+<p align="center">
+  <b>A modern, secure, and production-style IT Helpdesk Ticketing Platform built using Flask.</b>
+</p>
 
-## Features
+<p align="center">
+  Streamlining internal IT support workflows with intelligent ticket management, role-based access control, and a clean enterprise-grade interface.
+</p>
 
-- Employee registration and login
-- Secure password hashing
-- Session management with Flask-Login
-- Employee ticket creation and tracking
-- Optional photo or video evidence upload while creating tickets
-- Admin-only dashboard and ticket management
-- Ticket statuses: Open, In Progress, Resolved, Closed
-- Priority levels: Low, Medium, High, Critical
-- Admin remarks for support updates
-- Dashboard statistics
-- Ticket Pulse scoring to surface urgent active tickets
-- Admin search and priority/status filtering
-- Bootstrap 5 responsive interface
-- Form validation and CSRF protection
-- Duplicate email prevention
-- Sample admin account created automatically
+---
 
-## Tech Stack
+# ✨ Overview
 
-- Python Flask
-- SQLite
-- Flask-SQLAlchemy
-- Flask-Login
-- Flask-WTF
-- Werkzeug
-- HTML5, CSS3, Bootstrap 5
+ResolveIT is a professional Employee Helpdesk Ticketing System designed to simulate real-world IT support operations inside organizations.
 
-## Installation
+The platform allows employees to raise and track technical support requests while enabling IT administrators to efficiently manage tickets, monitor workflows, update statuses, and handle issue resolution through a centralized dashboard.
 
-1. Create and activate a virtual environment:
+Built with scalability, security, and user experience in mind, ResolveIT follows a modular Flask architecture and modern UI principles suitable for portfolio, academic, and production-level demonstrations.
 
-```bash
-python -m venv venv
-venv\Scripts\activate
-```
+---
 
-2. Install dependencies:
+# 🔥 Key Features
 
-```bash
-pip install -r requirements.txt
-```
+## 👨‍💼 Employee Features
 
-3. Run the application:
+* Secure User Registration & Login
+* Create IT Support Tickets
+* Track Ticket Status in Real-Time
+* Upload Evidence Files (Optional)
+* View Ticket History
+* Responsive User Dashboard
 
-```bash
-python app.py
-```
+---
 
-4. Open the app in your browser:
+## 🛠️ Admin Features
 
-```text
-http://127.0.0.1:5000
-```
+* Dedicated Admin Dashboard
+* View & Manage All Tickets
+* Update Ticket Status
+* Assign Ticket Priority
+* Add Administrative Remarks
+* Search & Filter Tickets
+* Dashboard Analytics & Statistics
+* Ticket Pulse Scoring System
 
-## Database Initialization
+---
 
-The SQLite database is initialized automatically on application startup. Running `python app.py` creates:
+## 🔐 Security Features
 
-```text
-database/helpdesk.db
-```
+* Password Hashing using Werkzeug
+* CSRF Protection
+* Secure Session Management
+* Form Validation
+* Duplicate Email Prevention
+* Role-Based Access Control
+* Protected Admin Routes
 
-It also creates all required database tables if they do not already exist.
+---
 
-## Sample Admin Account
-
-The application creates a sample admin account automatically:
+# 🧠 Ticket Workflow
 
 ```text
-Email: admin@example.com
-Password: Admin@123
+Open → In Progress → Resolved → Closed
 ```
 
-Use this account to access the admin dashboard and manage tickets.
+---
 
-## Folder Structure
+# ⚡ Tech Stack
+
+| Technology  | Purpose           |
+| ----------- | ----------------- |
+| Flask       | Backend Framework |
+| SQLite      | Database          |
+| SQLAlchemy  | ORM               |
+| Flask-Login | Authentication    |
+| Flask-WTF   | Form Handling     |
+| Bootstrap 5 | Responsive UI     |
+| HTML5/CSS3  | Frontend          |
+| Werkzeug    | Password Security |
+
+---
+
+# 📸 Application Screenshots
+
+## 🔑 Login Page
+
+> Add screenshot here
+
+```text
+screenshots/login.png
+```
+
+---
+
+## 📊 Admin Dashboard
+
+> Add screenshot here
+
+```text
+screenshots/dashboard.png
+```
+
+---
+
+## 🎫 Ticket Management
+
+> Add screenshot here
+
+```text
+screenshots/tickets.png
+```
+
+---
+
+# 📂 Project Structure
 
 ```text
 employee-helpdesk-system/
@@ -93,41 +129,150 @@ employee-helpdesk-system/
 │
 ├── static/
 │   ├── css/
-│   │   └── style.css
 │   ├── js/
+│   ├── img/
 │   └── uploads/
 │
 ├── templates/
-│   ├── base.html
-│   ├── index.html
-│   ├── login.html
-│   ├── register.html
-│   ├── dashboard.html
-│   ├── create_ticket.html
-│   ├── ticket_details.html
-│   ├── admin_dashboard.html
-│   ├── manage_tickets.html
-│   └── error.html
 │
 ├── models/
-│   └── models.py
 │
 ├── forms/
-│   └── forms.py
 │
 ├── routes/
-│   └── routes.py
 │
 └── database/
-    └── helpdesk.db
 ```
 
-## Future Improvements
+---
 
-- Email notifications for ticket updates
-- File attachments for tickets
-- Admin user management screen
-- Ticket category and department fields
-- Search and advanced filtering
-- Audit history for ticket changes
-- REST API for mobile or external integrations
+# ⚙️ Installation Guide
+
+## 1️⃣ Clone Repository
+
+```bash
+git clone https://github.com/HB2810/ResolveIT--Employee-Helpdesk-Ticketing-System.git
+```
+
+---
+
+## 2️⃣ Navigate to Project Folder
+
+```bash
+cd ResolveIT--Employee-Helpdesk-Ticketing-System
+```
+
+---
+
+## 3️⃣ Create Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+### Windows
+
+```bash
+venv\Scripts\activate
+```
+
+---
+
+## 4️⃣ Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## 5️⃣ Run Application
+
+```bash
+python app.py
+```
+
+---
+
+## 6️⃣ Open in Browser
+
+```text
+http://127.0.0.1:5000
+```
+
+---
+
+# 🗄️ Database Initialization
+
+The application automatically initializes the SQLite database during startup.
+
+Generated database:
+
+```text
+database/helpdesk.db
+```
+
+All required tables are created automatically if they do not already exist.
+
+---
+
+# 👑 Default Admin Credentials
+
+```text
+Email: admin@example.com
+Password: Admin@123
+```
+
+> Change admin credentials immediately in production environments.
+
+---
+
+# 🎯 Why ResolveIT?
+
+✔️ Real-world IT support workflow simulation
+✔️ Clean modular Flask architecture
+✔️ Professional dashboard system
+✔️ Resume-ready enterprise project
+✔️ Production-style authentication system
+✔️ Practical implementation of IT operations concepts
+
+---
+
+# 🚀 Future Enhancements
+
+* OTP Email Verification
+* Email Notification System
+* PostgreSQL Migration
+* Dark Mode UI
+* REST API Integration
+* Live Chat Support
+* AI-Based Ticket Prioritization
+* Audit Logs & Activity Tracking
+* Advanced Analytics Dashboard
+* Docker Deployment
+
+---
+
+# 📌 Deployment Roadmap
+
+* GitHub Repository Hosting
+* Render Cloud Deployment
+* Supabase PostgreSQL Integration
+* Environment Variable Security
+* Production WSGI Configuration
+
+---
+
+# 👨‍💻 Developer
+
+## Het Bhatt
+
+ B.E. Information Technology
+Passionate about AI, IT Infrastructure, Automation, and Intelligent Systems
+
+
+---
+
+# ⭐ Support
+
+If you found this project useful, consider starring the repository to support development and future improvements.
