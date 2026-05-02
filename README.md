@@ -85,38 +85,6 @@ Open → In Progress → Resolved → Closed
 
 ---
 
-# 📸 Application Screenshots
-
-## 🔑 Login Page
-
-> Add screenshot here
-
-```text
-screenshots/login.png
-```
-
----
-
-## 📊 Admin Dashboard
-
-> Add screenshot here
-
-```text
-screenshots/dashboard.png
-```
-
----
-
-## 🎫 Ticket Management
-
-> Add screenshot here
-
-```text
-screenshots/tickets.png
-```
-
----
-
 # 📂 Project Structure
 
 ```text
