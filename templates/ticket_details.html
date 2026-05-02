@@ -60,13 +60,13 @@
                 <h2><i class="fa-solid fa-paperclip me-2"></i>Attached Evidence</h2>
                 <div class="attachment-preview">
                     {% if ticket.attachment_is_image %}
-                        <img src="{{ url_for('static', filename='uploads/' ~ ticket.attachment_filename) }}" alt="{{ ticket.attachment_original_name }}">
+                        <img src="{{ url_for('main.uploaded_file', filename=ticket.attachment_filename) }}" alt="{{ ticket.attachment_original_name }}">
                     {% elif ticket.attachment_is_video %}
                         <video controls>
-                            <source src="{{ url_for('static', filename='uploads/' ~ ticket.attachment_filename) }}">
+                            <source src="{{ url_for('main.uploaded_file', filename=ticket.attachment_filename) }}">
                         </video>
                     {% endif %}
-                    <a class="btn btn-sm btn-outline-primary mt-3" href="{{ url_for('static', filename='uploads/' ~ ticket.attachment_filename) }}" target="_blank" rel="noopener">
+                    <a class="btn btn-sm btn-outline-primary mt-3" href="{{ url_for('main.uploaded_file', filename=ticket.attachment_filename) }}" target="_blank" rel="noopener">
                         <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>{{ ticket.attachment_original_name }}
                     </a>
                 </div>

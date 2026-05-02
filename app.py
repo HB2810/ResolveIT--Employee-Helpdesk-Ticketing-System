@@ -5,6 +5,7 @@ from flask_login import LoginManager
 from sqlalchemy import inspect
 
 from config import Config
+from config import IS_VERCEL
 from models.models import db, User
 from routes.routes import main_bp
 
@@ -20,11 +21,13 @@ def load_user(user_id):
 
 
 def create_app():
-    app = Flask(__name__)
+    static_folder = "public/static" if IS_VERCEL else "static"
+    app = Flask(__name__, static_folder=static_folder, static_url_path="/static")
     app.config.from_object(Config)
 
     Path(app.config["UPLOAD_FOLDER"]).mkdir(parents=True, exist_ok=True)
-    Path("database").mkdir(parents=True, exist_ok=True)
+    if not IS_VERCEL:
+        Path("database").mkdir(parents=True, exist_ok=True)
 
     db.init_app(app)
     login_manager.init_app(app)

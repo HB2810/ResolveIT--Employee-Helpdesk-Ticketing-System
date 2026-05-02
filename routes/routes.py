@@ -2,7 +2,7 @@ from functools import wraps
 from pathlib import Path
 from uuid import uuid4
 
-from flask import Blueprint, abort, current_app, flash, redirect, render_template, request, url_for
+from flask import Blueprint, abort, current_app, flash, redirect, render_template, request, send_from_directory, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy import or_
 from werkzeug.utils import secure_filename
@@ -41,6 +41,12 @@ def save_ticket_attachment(file_storage):
     upload_path.mkdir(parents=True, exist_ok=True)
     file_storage.save(upload_path / stored_name)
     return stored_name, original_name, media_type
+
+
+@main_bp.route("/uploads/<path:filename>")
+@login_required
+def uploaded_file(filename):
+    return send_from_directory(current_app.config["UPLOAD_FOLDER"], filename)
 
 
 @main_bp.app_errorhandler(403)
