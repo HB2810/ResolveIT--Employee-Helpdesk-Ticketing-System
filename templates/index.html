@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}ResolveIT | Support Ticketing{% endblock %}
+{% block main_class %}page-shell{% endblock %}
+{% block hero %}
+<section class="hero-band">
+    <div class="scan-line" aria-hidden="true"></div>
+    <div class="container">
+        <div class="hero-layout">
+            <div>
+                <img src="{{ url_for('static', filename='img/logo1.png') }}" alt="ResolveIT logo" class="hero-logo mb-4">
+                <div class="eyebrow hero-eyebrow">Employee Helpdesk Ticketing System</div>
+                <h1>ResolveIT</h1>
+                <p class="mt-3 mb-4">A technical but simple helpdesk workspace for employees to raise issues with screenshots or videos, while admins prioritize work through Ticket Pulse.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{{ url_for('main.login') }}" class="btn btn-primary btn-lg"><i class="bi bi-box-arrow-in-right me-1"></i>Sign In</a>
+                    <a href="{{ url_for('main.register') }}" class="btn btn-light btn-lg"><i class="bi bi-person-plus me-1"></i>Create Account</a>
+                </div>
+            </div>
+            <div class="ops-panel">
+                <div class="ops-header">
+                    <span><i class="bi bi-cpu me-1"></i>Live Support Console</span>
+                    <span class="live-dot">Online</span>
+                </div>
+                <div class="ops-metric"><i class="bi bi-activity"></i><div><strong>Ticket Pulse</strong><span>Urgency score for every request</span></div></div>
+                <div class="ops-metric"><i class="bi bi-camera-video"></i><div><strong>Visual Evidence</strong><span>Attach screenshots or videos</span></div></div>
+                <div class="ops-metric"><i class="bi bi-shield-check"></i><div><strong>Admin Control</strong><span>Status, priority, remarks, closure</span></div></div>
+                <div class="terminal-lines">
+                    <span>resolveit.scan(ticket)</span>
+                    <span>priority.queue.sync()</span>
+                    <span>support.status.ready()</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block content %}
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="feature-tile">
+            <i class="bi bi-ticket-perforated"></i>
+            <h2>Raise Tickets Fast</h2>
+            <p>Employees submit clear IT issues with priority, description, and optional evidence.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="feature-tile">
+            <i class="bi bi-graph-up-arrow"></i>
+            <h2>Smart Prioritization</h2>
+            <p>Ticket Pulse highlights active requests that need admin attention first.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="feature-tile">
+            <i class="bi bi-kanban"></i>
+            <h2>Clean Admin Flow</h2>
+            <p>Search, filter, update, remark, and close tickets from one simple dashboard.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

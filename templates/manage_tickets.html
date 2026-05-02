@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Manage Tickets | ResolveIT{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div>
+        <div class="eyebrow">Ticket control board</div>
+        <h1>Manage Tickets</h1>
+        <p>Search, filter, prioritize, and resolve employee support requests.</p>
+    </div>
+</div>
+
+<div class="content-panel mb-4">
+    <form method="get" class="filter-bar">
+        <div class="search-box search-wide">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="search" name="q" value="{{ search_query }}" class="form-control" placeholder="Search title, employee, email">
+        </div>
+        <select name="status" class="form-select" aria-label="Filter tickets by status">
+            {% for status in ["All", "Open", "In Progress", "Resolved", "Closed"] %}
+                <option value="{{ status }}" {% if status_filter == status %}selected{% endif %}>{{ status }}</option>
+            {% endfor %}
+        </select>
+        <select name="priority" class="form-select" aria-label="Filter tickets by priority">
+            {% for priority in ["All", "Low", "Medium", "High", "Critical"] %}
+                <option value="{{ priority }}" {% if priority_filter == priority %}selected{% endif %}>{{ priority }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-primary" type="submit"><i class="fa-solid fa-filter me-2"></i>Filter</button>
+    </form>
+</div>
+
+<div class="content-panel">
+    <div class="panel-toolbar">
+        <div>
+            <h2>Ticket Queue</h2>
+            <p>{{ tickets|length }} ticket{{ "" if tickets|length == 1 else "s" }} found, sorted by Ticket Pulse.</p>
+        </div>
+        <div class="search-box">
+            <i class="fa-solid fa-bolt"></i>
+            <input type="search" class="form-control" data-table-search="#adminTickets" placeholder="Quick filter visible rows">
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover premium-table mb-0" id="adminTickets">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Employee</th>
+                <th>Ticket</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Pulse</th>
+                <th>Next Action</th>
+                <th>Updated</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for ticket in tickets %}
+                <tr>
+                    <td>#{{ ticket.id }}</td>
+                    <td>
+                        <div class="fw-semibold">{{ ticket.employee.username }}</div>
+                        <small class="text-muted">{{ ticket.employee.email }}</small>
+                    </td>
+                    <td>
+                        <div class="fw-semibold">{{ ticket.title }}</div>
+                        <small class="text-muted">{{ "Evidence attached" if ticket.has_attachment else "No attachment" }}</small>
+                    </td>
+                    <td><span class="priority-pill priority-{{ ticket.priority|lower }}">{{ ticket.priority }}</span></td>
+                    <td>
+                        {% set status_class = {"Open": "badge-status-open", "In Progress": "badge-status-in-progress", "Resolved": "badge-status-resolved", "Closed": "badge-status-closed"}.get(ticket.status, "badge-status-open") %}
+                        <span class="badge rounded-pill {{ status_class }}">{{ ticket.status }}</span>
+                    </td>
+                    <td><div class="pulse-chip {{ ticket.pulse_class }}"><span>{{ ticket.pulse_score }}</span><small>{{ ticket.pulse_label }}</small></div></td>
+                    <td>{{ ticket.next_best_action }}</td>
+                    <td>{{ ticket.updated_at.strftime("%Y-%m-%d %H:%M") }}</td>
+                    <td class="text-end"><a href="{{ url_for('main.ticket_details', ticket_id=ticket.id) }}" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen-to-square me-1"></i>Manage</a></td>
+                </tr>
+            {% else %}
+                <tr><td colspan="9"><div class="empty-state"><i class="fa-regular fa-folder-open"></i>No tickets match this filter.</div></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

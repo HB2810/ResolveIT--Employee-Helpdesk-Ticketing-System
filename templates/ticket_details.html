@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Ticket #{{ ticket.id }} | ResolveIT{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div>
+        <div class="eyebrow">Ticket details</div>
+        <h1>#{{ ticket.id }} {{ ticket.title }}</h1>
+        <p>Created by {{ ticket.employee.username }} on {{ ticket.created_at.strftime("%Y-%m-%d %H:%M") }}</p>
+    </div>
+    {% set status_class = {"Open": "badge-status-open", "In Progress": "badge-status-in-progress", "Resolved": "badge-status-resolved", "Closed": "badge-status-closed"}.get(ticket.status, "badge-status-open") %}
+    <span class="badge rounded-pill {{ status_class }}">{{ ticket.status }}</span>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="content-panel">
+            <div class="row g-3 mb-4">
+                <div class="col-sm-4">
+                    <div class="ticket-card p-3 {{ ticket.pulse_class }}">
+                        <div class="stat-label">Ticket Pulse</div>
+                        <div class="d-flex align-items-end gap-2">
+                            <div class="fw-bold fs-3 lh-1">{{ ticket.pulse_score }}</div>
+                            <div class="small">{{ ticket.pulse_label }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="ticket-card p-3">
+                        <div class="stat-label">Priority</div>
+                        <div class="fw-bold priority-{{ ticket.priority|lower }}">{{ ticket.priority }}</div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="ticket-card p-3">
+                        <div class="stat-label">Age</div>
+                        <div class="fw-bold">{{ ticket.age_hours }}h</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ticket-timeline mb-4">
+                <div class="timeline-step active"><span></span><strong>Open</strong></div>
+                <div class="timeline-step {% if ticket.status in ['In Progress', 'Resolved', 'Closed'] %}active{% endif %}"><span></span><strong>In Progress</strong></div>
+                <div class="timeline-step {% if ticket.status in ['Resolved', 'Closed'] %}active{% endif %}"><span></span><strong>Resolved</strong></div>
+                <div class="timeline-step {% if ticket.status == 'Closed' %}active{% endif %}"><span></span><strong>Closed</strong></div>
+            </div>
+
+            <div class="detail-section">
+                <h2><i class="fa-regular fa-file-lines me-2"></i>Description</h2>
+                <p>{{ ticket.description }}</p>
+            </div>
+
+            <div class="detail-section">
+                <h2><i class="fa-regular fa-comment-dots me-2"></i>Admin Remarks</h2>
+                <p>{{ ticket.admin_remark or "No remarks added yet." }}</p>
+            </div>
+
+            {% if ticket.has_attachment %}
+            <div class="detail-section">
+                <h2><i class="fa-solid fa-paperclip me-2"></i>Attached Evidence</h2>
+                <div class="attachment-preview">
+                    {% if ticket.attachment_is_image %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ ticket.attachment_filename) }}" alt="{{ ticket.attachment_original_name }}">
+                    {% elif ticket.attachment_is_video %}
+                        <video controls>
+                            <source src="{{ url_for('static', filename='uploads/' ~ ticket.attachment_filename) }}">
+                        </video>
+                    {% endif %}
+                    <a class="btn btn-sm btn-outline-primary mt-3" href="{{ url_for('static', filename='uploads/' ~ ticket.attachment_filename) }}" target="_blank" rel="noopener">
+                        <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>{{ ticket.attachment_original_name }}
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if current_user.is_admin %}
+    <div class="col-lg-4">
+        <div class="content-panel sticky-panel">
+            <div class="panel-toolbar">
+                <div>
+                    <h2>Update Ticket</h2>
+                    <p>{{ ticket.next_best_action }}</p>
+                </div>
+            </div>
+            <form method="post" action="{{ url_for('main.update_ticket', ticket_id=ticket.id) }}" novalidate>
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.status.label(class="form-label") }}
+                    {{ form.status(class="form-select") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.priority.label(class="form-label") }}
+                    {{ form.priority(class="form-select") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.admin_remark.label(class="form-label") }}
+                    {{ form.admin_remark(class="form-control", rows="5") }}
+                </div>
+                <button type="submit" class="btn btn-primary w-100"><i class="fa-solid fa-floppy-disk me-2"></i>Update Ticket</button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

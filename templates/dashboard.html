@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Employee Dashboard | ResolveIT{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div>
+        <div class="eyebrow">Employee workspace</div>
+        <h1>My Tickets</h1>
+        <p>Track support requests, evidence, status, and urgency from one clean workspace.</p>
+    </div>
+    <a href="{{ url_for('main.create_ticket') }}" class="btn btn-primary btn-lg">
+        <i class="fa-solid fa-plus me-2"></i>Create Ticket
+    </a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-lg-3"><div class="stat-card accent-blue"><i class="fa-solid fa-ticket stat-icon"></i><div class="stat-label">Total</div><div class="stat-value">{{ stats.total }}</div><div class="stat-trend">Submitted by you</div></div></div>
+    <div class="col-sm-6 col-lg-3"><div class="stat-card accent-sky"><i class="fa-solid fa-inbox stat-icon"></i><div class="stat-label">Open</div><div class="stat-value">{{ stats.open }}</div><div class="stat-trend">Awaiting triage</div></div></div>
+    <div class="col-sm-6 col-lg-3"><div class="stat-card accent-amber"><i class="fa-solid fa-spinner stat-icon"></i><div class="stat-label">In Progress</div><div class="stat-value">{{ stats.progress }}</div><div class="stat-trend">Being worked</div></div></div>
+    <div class="col-sm-6 col-lg-3"><div class="stat-card accent-rose"><i class="fa-solid fa-bolt stat-icon"></i><div class="stat-label">Needs Attention</div><div class="stat-value">{{ stats.attention }}</div><div class="stat-trend">Pulse 60+</div></div></div>
+</div>
+
+{% if attention_ticket %}
+<div class="focus-strip {{ attention_ticket.pulse_class }} mb-4">
+    <div>
+        <div class="eyebrow">Ticket Pulse</div>
+        <h2>{{ attention_ticket.title }}</h2>
+        <p>{{ attention_ticket.pulse_label }} · {{ attention_ticket.next_best_action }}</p>
+    </div>
+    <div class="pulse-meter">
+        <span>{{ attention_ticket.pulse_score }}</span>
+    </div>
+</div>
+{% endif %}
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-8">
+        <div class="content-panel h-100">
+            <div class="panel-toolbar">
+                <div>
+                    <h2>Ticket History</h2>
+                    <p>Recent requests sorted by latest activity.</p>
+                </div>
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="search" class="form-control" data-table-search="#employeeTickets" placeholder="Search tickets">
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover premium-table align-middle mb-0" id="employeeTickets">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Ticket</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Pulse</th>
+                        <th>Created</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for ticket in tickets %}
+                        <tr>
+                            <td>#{{ ticket.id }}</td>
+                            <td>
+                                <div class="fw-semibold">{{ ticket.title }}</div>
+                                <small class="text-muted">{{ ticket.next_best_action }}</small>
+                            </td>
+                            <td><span class="priority-pill priority-{{ ticket.priority|lower }}">{{ ticket.priority }}</span></td>
+                            <td>
+                                {% set status_class = {"Open": "badge-status-open", "In Progress": "badge-status-in-progress", "Resolved": "badge-status-resolved", "Closed": "badge-status-closed"}.get(ticket.status, "badge-status-open") %}
+                                <span class="badge rounded-pill {{ status_class }}">{{ ticket.status }}</span>
+                            </td>
+                            <td><div class="pulse-chip {{ ticket.pulse_class }}"><span>{{ ticket.pulse_score }}</span><small>{{ ticket.pulse_label }}</small></div></td>
+                            <td>{{ ticket.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+                            <td class="text-end"><a href="{{ url_for('main.ticket_details', ticket_id=ticket.id) }}" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-arrow-right"></i></a></td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="7"><div class="empty-state"><i class="fa-regular fa-folder-open"></i>No tickets submitted yet.</div></td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="content-panel h-100 operations-brief">
+            <i class="fa-solid fa-circle-nodes"></i>
+            <h2>Support Flow</h2>
+            <p>Attach evidence, track status, and follow admin remarks without losing context.</p>
+            <div class="brief-grid">
+                <span><strong>{{ stats.open + stats.progress }}</strong> active</span>
+                <span><strong>{{ stats.resolved + stats.closed }}</strong> handled</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
