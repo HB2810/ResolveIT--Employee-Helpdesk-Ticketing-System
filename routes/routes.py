@@ -2,8 +2,9 @@ from functools import wraps
 from pathlib import Path
 from uuid import uuid4
 
-from flask import Blueprint, abort, current_app, flash, redirect, render_template, request, send_from_directory, url_for
+from flask import Blueprint, abort, current_app, flash, redirect, render_template, request, send_from_directory, url_for, jsonify
 from flask_login import current_user, login_required, login_user, logout_user
+from flask_mail import Message
 from sqlalchemy import or_
 from werkzeug.utils import secure_filename
 
@@ -158,6 +159,31 @@ def create_ticket():
         )
         db.session.add(ticket)
         db.session.commit()
+        
+        # Send email notification to admin
+        try:
+            from app import mail
+            msg = Message(
+                subject=f"New Ticket Created: {ticket.title}",
+                recipients=["hetbhatt@gmail.com"],
+                html=f"""
+                <div style="font-family: Arial, sans-serif; color: #333;">
+                    <h2>New Support Ticket Created</h2>
+                    <p><strong>Title:</strong> {ticket.title}</p>
+                    <p><strong>Priority:</strong> {ticket.priority}</p>
+                    <p><strong>User:</strong> {current_user.username} ({current_user.email})</p>
+                    <p><strong>Description:</strong></p>
+                    <blockquote style="border-left: 4px solid #007bff; padding-left: 10px; margin-left: 0;">
+                        {ticket.description}
+                    </blockquote>
+                    <p><em>ResolveIT Helpdesk System</em></p>
+                </div>
+                """
+            )
+            mail.send(msg)
+        except Exception as e:
+            print(f"Failed to send email: {e}")
+
         flash("Your support ticket has been created.", "success")
         return redirect(url_for("main.ticket_details", ticket_id=ticket.id))
 
@@ -242,7 +268,65 @@ def update_ticket(ticket_id):
         ticket.priority = form.priority.data
         ticket.admin_remark = form.admin_remark.data.strip() if form.admin_remark.data else None
         db.session.commit()
+        
+        # Send email to user
+        try:
+            from app import mail
+            msg = Message(
+                subject=f"Ticket Status Updated: {ticket.title}",
+                recipients=[ticket.employee.email],
+                html=f"""
+                <div style="font-family: Arial, sans-serif; color: #333;">
+                    <h2>Your Support Ticket Status Was Updated</h2>
+                    <p><strong>Title:</strong> {ticket.title}</p>
+                    <p><strong>New Status:</strong> {ticket.status}</p>
+                    <p><strong>Admin Remark:</strong></p>
+                    <blockquote style="border-left: 4px solid #007bff; padding-left: 10px; margin-left: 0;">
+                        {ticket.admin_remark or "No remarks provided."}
+                    </blockquote>
+                    <p><em>ResolveIT Helpdesk System</em></p>
+                </div>
+                """
+            )
+            mail.send(msg)
+        except Exception as e:
+            print(f"Failed to send email: {e}")
+
         flash("Ticket updated successfully.", "success")
     else:
         flash("Please review the ticket update form.", "danger")
     return redirect(url_for("main.ticket_details", ticket_id=ticket.id))
+
+
+@main_bp.route("/api/dashboard_data")
+@login_required
+def api_dashboard_data():
+    if current_user.is_admin:
+        tickets = Ticket.query.order_by(Ticket.created_at.desc()).all()
+    else:
+        tickets = Ticket.query.filter_by(user_id=current_user.id).order_by(Ticket.created_at.desc()).all()
+    
+    active_tickets = [ticket for ticket in tickets if ticket.status not in ("Resolved", "Closed")]
+    stats = {
+        "total": len(tickets),
+        "open": sum(1 for ticket in tickets if ticket.status == "Open"),
+        "progress": sum(1 for ticket in tickets if ticket.status == "In Progress"),
+        "resolved": sum(1 for ticket in tickets if ticket.status == "Resolved"),
+        "closed": sum(1 for ticket in tickets if ticket.status == "Closed"),
+        "attention": sum(1 for ticket in active_tickets if ticket.pulse_score >= 60),
+    }
+    
+    ticket_list = [{
+        "id": t.id,
+        "title": t.title,
+        "priority": t.priority,
+        "status": t.status,
+        "pulse_class": t.pulse_class,
+        "created_at": t.created_at.isoformat() if t.created_at else None,
+        "username": t.employee.username if t.user_id else "Unknown"
+    } for t in tickets[:10]]
+    
+    return jsonify({
+        "stats": stats,
+        "tickets": ticket_list
+    })

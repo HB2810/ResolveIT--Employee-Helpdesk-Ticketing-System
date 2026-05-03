@@ -16,3 +16,11 @@ class Config:
     UPLOAD_FOLDER = Path("/tmp/resolveit-uploads") if IS_VERCEL else BASE_DIR / "static" / "uploads"
     MAX_CONTENT_LENGTH = 25 * 1024 * 1024
     WTF_CSRF_ENABLED = True
+
+    # Mail configuration
+    MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
+    MAIL_PORT = int(os.environ.get("MAIL_PORT", 587))
+    MAIL_USE_TLS = os.environ.get("MAIL_USE_TLS", "true").lower() in ["true", "on", "1"]
+    MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
+    MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
+    MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER", "noreply@resolveit.com")

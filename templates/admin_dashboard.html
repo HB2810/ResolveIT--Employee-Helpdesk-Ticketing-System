@@ -1,155 +1,140 @@
 {% extends "base.html" %}
 {% block title %}Admin Dashboard | ResolveIT{% endblock %}
 {% block content %}
-<div class="page-heading">
+<div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <div class="eyebrow">Admin command center</div>
-        <h1>Support Operations</h1>
-        <p>Monitor workload, urgency, analytics, and recent support movement.</p>
+        <h3 class="fw-bold mb-0">Support Operations</h3>
+        <p class="text-muted mb-0">Monitor workload, urgency, and analytics.</p>
     </div>
-    <a href="{{ url_for('main.manage_tickets') }}" class="btn btn-primary btn-lg">
-        <i class="fa-solid fa-table-list me-2"></i>Manage Tickets
+    <a href="{{ url_for('main.manage_tickets') }}" class="btn btn-primary">
+        <i class="fa-solid fa-list-check me-2"></i>Manage Queue
     </a>
 </div>
 
-<div class="row g-3 mb-4">
-    <div class="col-sm-6 col-xl"><div class="stat-card accent-blue"><i class="fa-solid fa-layer-group stat-icon"></i><div class="stat-label">Total Tickets</div><div class="stat-value">{{ stats.total }}</div><div class="stat-trend">All requests</div></div></div>
-    <div class="col-sm-6 col-xl"><div class="stat-card accent-sky"><i class="fa-solid fa-inbox stat-icon"></i><div class="stat-label">Open</div><div class="stat-value">{{ stats.open }}</div><div class="stat-trend">Needs triage</div></div></div>
-    <div class="col-sm-6 col-xl"><div class="stat-card accent-amber"><i class="fa-solid fa-arrows-rotate stat-icon"></i><div class="stat-label">In Progress</div><div class="stat-value">{{ stats.progress }}</div><div class="stat-trend">Being handled</div></div></div>
-    <div class="col-sm-6 col-xl"><div class="stat-card accent-green"><i class="fa-solid fa-circle-check stat-icon"></i><div class="stat-label">Resolved</div><div class="stat-value">{{ stats.resolved }}</div><div class="stat-trend">Ready to close</div></div></div>
-    <div class="col-sm-6 col-xl"><div class="stat-card accent-rose"><i class="fa-solid fa-bolt stat-icon"></i><div class="stat-label">Attention</div><div class="stat-value">{{ stats.attention }}</div><div class="stat-trend">Pulse 60+</div></div></div>
-</div>
-
-<div class="row g-4 mb-4">
-    <div class="col-lg-4">
-        <div class="content-panel h-100">
-            <div class="panel-toolbar">
+<!-- Container ID used by live_update.js to verify it's on a dashboard -->
+<div id="dashboard-stats-container">
+    <div class="row g-4 mb-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="card stat-card h-100">
                 <div>
-                    <h2>Ticket Pulse Queue</h2>
-                    <p>Highest attention tickets first.</p>
+                    <h6 class="text-muted mb-1 text-uppercase fw-semibold" style="font-size:0.8rem">Total Tickets</h6>
+                    <h2 class="fw-bold mb-0" id="stat-total">{{ stats.total }}</h2>
+                </div>
+                <div class="icon-box bg-primary-light">
+                    <i class="fa-solid fa-layer-group"></i>
                 </div>
             </div>
-            <div class="pulse-list">
-                {% for ticket in priority_queue %}
-                    <a class="pulse-list-item {{ ticket.pulse_class }}" href="{{ url_for('main.ticket_details', ticket_id=ticket.id) }}">
-                        <div>
-                            <div class="fw-semibold">#{{ ticket.id }} {{ ticket.title }}</div>
-                            <small>{{ ticket.employee.username }} · {{ ticket.next_best_action }}</small>
-                        </div>
-                        <strong>{{ ticket.pulse_score }}</strong>
-                    </a>
-                {% else %}
-                    <div class="empty-state"><i class="fa-regular fa-circle-check"></i>No active tickets need attention.</div>
-                {% endfor %}
-            </div>
         </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="content-panel h-100">
-            <div class="panel-toolbar">
+        <div class="col-sm-6 col-xl-2">
+            <div class="card stat-card h-100">
                 <div>
-                    <h2>Status Analytics</h2>
-                    <p>Live ticket distribution.</p>
+                    <h6 class="text-muted mb-1 text-uppercase fw-semibold" style="font-size:0.8rem">Open</h6>
+                    <h2 class="fw-bold mb-0" id="stat-open">{{ stats.open }}</h2>
+                </div>
+                <div class="icon-box bg-warning-light">
+                    <i class="fa-solid fa-envelope-open-text"></i>
                 </div>
             </div>
-            <div class="chart-wrap">
-                <canvas id="statusChart" data-open="{{ stats.open }}" data-progress="{{ stats.progress }}" data-resolved="{{ stats.resolved }}" data-closed="{{ stats.closed }}"></canvas>
-            </div>
         </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="content-panel h-100">
-            <div class="panel-toolbar">
+        <div class="col-sm-6 col-xl-2">
+            <div class="card stat-card h-100">
                 <div>
-                    <h2>Activity Timeline</h2>
-                    <p>Latest operational movement.</p>
+                    <h6 class="text-muted mb-1 text-uppercase fw-semibold" style="font-size:0.8rem">In Progress</h6>
+                    <h2 class="fw-bold mb-0" id="stat-progress">{{ stats.progress }}</h2>
+                </div>
+                <div class="icon-box" style="background: rgba(13,202,240,0.1); color: #0dcaf0;">
+                    <i class="fa-solid fa-spinner"></i>
                 </div>
             </div>
-            <div class="activity-timeline">
-                {% for ticket in tickets[:5] %}
-                    <a href="{{ url_for('main.ticket_details', ticket_id=ticket.id) }}" class="activity-item">
-                        <span class="activity-dot"></span>
-                        <div>
-                            <strong>#{{ ticket.id }} {{ ticket.title }}</strong>
-                            <small>{{ ticket.status }} by {{ ticket.employee.username }}</small>
-                        </div>
-                    </a>
-                {% else %}
-                    <div class="empty-state"><i class="fa-regular fa-clock"></i>No recent activity yet.</div>
-                {% endfor %}
+        </div>
+        <div class="col-sm-6 col-xl-2">
+            <div class="card stat-card h-100">
+                <div>
+                    <h6 class="text-muted mb-1 text-uppercase fw-semibold" style="font-size:0.8rem">Resolved</h6>
+                    <h2 class="fw-bold mb-0" id="stat-resolved">{{ stats.resolved }}</h2>
+                </div>
+                <div class="icon-box bg-success-light">
+                    <i class="fa-solid fa-check-circle"></i>
+                </div>
             </div>
         </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="card stat-card h-100 border-danger border border-2 border-opacity-25">
+                <div>
+                    <h6 class="text-danger mb-1 text-uppercase fw-semibold" style="font-size:0.8rem">Attention Needed</h6>
+                    <h2 class="fw-bold mb-0 text-danger" id="stat-attention">{{ stats.attention }}</h2>
+                </div>
+                <div class="icon-box bg-danger-light">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+            </div>
+        </div>
+        <!-- Hidden for JS script -->
+        <div class="d-none" id="stat-closed">{{ stats.closed }}</div>
     </div>
 </div>
 
-<div class="row g-4 mb-4">
-    <div class="col-lg-7">
-        <div class="content-panel h-100">
-            <div class="panel-toolbar">
-                <div>
-                    <h2>Workload Shape</h2>
-                    <p>Current team load by status.</p>
-                </div>
-            </div>
-            <div class="status-bars">
-                {% set total = stats.total if stats.total else 1 %}
-                <div><span>Open</span><div class="progress"><div class="progress-bar bg-primary" style="width: {{ (stats.open / total * 100)|round(0) }}%"></div></div></div>
-                <div><span>In Progress</span><div class="progress"><div class="progress-bar bg-warning" style="width: {{ (stats.progress / total * 100)|round(0) }}%"></div></div></div>
-                <div><span>Resolved</span><div class="progress"><div class="progress-bar bg-success" style="width: {{ (stats.resolved / total * 100)|round(0) }}%"></div></div></div>
-                <div><span>Closed</span><div class="progress"><div class="progress-bar bg-secondary" style="width: {{ (stats.closed / total * 100)|round(0) }}%"></div></div></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-5">
-        <div class="content-panel h-100 operations-brief">
-            <i class="fa-solid fa-shield-halved"></i>
-            <h2>Operations Health</h2>
-            <p>ResolveIT keeps urgent tickets visible, recent activity traceable, and admin actions focused.</p>
-            <div class="brief-grid">
-                <span><strong>{{ stats.attention }}</strong> hot items</span>
-                <span><strong>{{ stats.open + stats.progress }}</strong> active tickets</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="content-panel">
-    <div class="panel-toolbar">
-        <div>
-            <h2>Recent Tickets</h2>
-            <p>Latest tickets submitted by employees.</p>
-        </div>
+<div class="card mb-4">
+    <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fw-semibold"><i class="fa-solid fa-users-gear me-2 text-primary"></i>Recent Operations</h5>
     </div>
     <div class="table-responsive">
-        <table class="table table-hover premium-table mb-0">
+        <table class="table table-custom mb-0">
             <thead>
-            <tr>
-                <th>ID</th>
-                <th>Employee</th>
-                <th>Title</th>
-                <th>Priority</th>
-                <th>Status</th>
-                <th>Pulse</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for ticket in tickets %}
                 <tr>
-                    <td>#{{ ticket.id }}</td>
-                    <td>{{ ticket.employee.username }}</td>
-                    <td>{{ ticket.title }}</td>
-                    <td><span class="priority-pill priority-{{ ticket.priority|lower }}">{{ ticket.priority }}</span></td>
-                    <td>
-                        {% set status_class = {"Open": "badge-status-open", "In Progress": "badge-status-in-progress", "Resolved": "badge-status-resolved", "Closed": "badge-status-closed"}.get(ticket.status, "badge-status-open") %}
-                        <span class="badge rounded-pill {{ status_class }}">{{ ticket.status }}</span>
-                    </td>
-                    <td><div class="pulse-chip {{ ticket.pulse_class }}"><span>{{ ticket.pulse_score }}</span><small>{{ ticket.pulse_label }}</small></div></td>
-                    <td class="text-end"><a href="{{ url_for('main.ticket_details', ticket_id=ticket.id) }}" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-arrow-up-right-from-square me-1"></i>Manage</a></td>
+                    <th class="ps-4">ID</th>
+                    <th>User</th>
+                    <th>Title</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Created At</th>
+                    <th class="text-end pe-4">Action</th>
                 </tr>
-            {% else %}
-                <tr><td colspan="7"><div class="empty-state"><i class="fa-regular fa-folder-open"></i>No tickets found.</div></td></tr>
-            {% endfor %}
+            </thead>
+            <tbody id="tickets-table-body">
+                {% for ticket in tickets %}
+                <tr class="align-middle">
+                    <td class="ps-4"><span class="badge bg-light text-dark border">#{{ ticket.id }}</span></td>
+                    <td>
+                        <div class="fw-medium text-dark">{{ ticket.employee.username }}</div>
+                    </td>
+                    <td class="fw-bold">{{ ticket.title }}</td>
+                    <td>
+                        {% if ticket.priority == 'Critical' %}
+                            <span class="badge rounded-pill bg-danger">Critical</span>
+                        {% elif ticket.priority == 'High' %}
+                            <span class="badge rounded-pill bg-warning text-dark">High</span>
+                        {% elif ticket.priority == 'Medium' %}
+                            <span class="badge rounded-pill bg-info text-dark">Medium</span>
+                        {% else %}
+                            <span class="badge rounded-pill bg-secondary">Low</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if ticket.status == 'Open' %}
+                            <span class="badge rounded-pill bg-primary">Open</span>
+                        {% elif ticket.status == 'In Progress' %}
+                            <span class="badge rounded-pill bg-warning text-dark">In Progress</span>
+                        {% elif ticket.status == 'Resolved' %}
+                            <span class="badge rounded-pill bg-success">Resolved</span>
+                        {% else %}
+                            <span class="badge rounded-pill bg-secondary">{{ ticket.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-muted small">{{ ticket.created_at.strftime("%b %d, %Y, %I:%M %p") }}</td>
+                    <td class="text-end pe-4">
+                        <a href="{{ url_for('main.ticket_details', ticket_id=ticket.id) }}" class="btn btn-sm btn-outline-primary">Manage</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="text-center py-5 text-muted">
+                        <div class="mb-3"><i class="fa-solid fa-inbox fa-3x"></i></div>
+                        <h5>No tickets found</h5>
+                        <p>The queue is completely clear.</p>
+                    </td>
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

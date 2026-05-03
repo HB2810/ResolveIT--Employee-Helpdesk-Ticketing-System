@@ -1,59 +1,46 @@
 {% extends "base.html" %}
 {% block title %}Register | ResolveIT{% endblock %}
-{% block main_class %}auth-page{% endblock %}
-{% block content %}
-<div class="auth-split">
-    <section class="auth-visual">
-        <img src="{{ url_for('static', filename='img/logo1.png') }}" alt="ResolveIT logo" class="auth-hero-logo">
-        <div class="auth-illustration">
-            <div class="security-ring"></div>
-            <i class="fa-solid fa-user-plus"></i>
+{% block public_content %}
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow border-0 rounded-3">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <div class="bg-primary-light text-primary rounded-circle d-inline-flex justify-content-center align-items-center mb-3" style="width: 60px; height: 60px;">
+                        <i class="fa-solid fa-user-plus fa-2x"></i>
+                    </div>
+                    <h3 class="fw-bold">Create Account</h3>
+                    <p class="text-muted">Register as an employee to submit support requests.</p>
+                </div>
+                <form method="post" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="form-floating mb-3">
+                        {{ form.username(class="form-control", placeholder="Full name") }}
+                        {{ form.username.label }}
+                        {% for error in form.username.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="form-floating mb-3">
+                        {{ form.email(class="form-control", placeholder="name@company.com") }}
+                        {{ form.email.label }}
+                        {% for error in form.email.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="form-floating mb-3">
+                        {{ form.password(class="form-control", placeholder="Minimum 8 characters") }}
+                        {{ form.password.label }}
+                        {% for error in form.password.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="form-floating mb-4">
+                        {{ form.confirm_password(class="form-control", placeholder="Repeat password") }}
+                        {{ form.confirm_password.label }}
+                        {% for error in form.confirm_password.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg w-100"><i class="fa-solid fa-user-plus me-2"></i>Register</button>
+                </form>
+                <div class="text-center mt-4">
+                    <p class="text-muted mb-0">Already registered? <a href="{{ url_for('main.login') }}" class="text-primary text-decoration-none fw-medium">Sign in</a></p>
+                </div>
+            </div>
         </div>
-        <h1>Start support the right way.</h1>
-        <p>Create an employee account and submit IT requests with screenshots, videos, and clear tracking.</p>
-        <div class="auth-metrics">
-            <div><strong>Fast</strong><span>Ticket Entry</span></div>
-            <div><strong>Visual</strong><span>Evidence</span></div>
-            <div><strong>Clean</strong><span>Status Flow</span></div>
-        </div>
-    </section>
-    <section class="auth-card">
-        <div class="auth-card-header">
-            <div class="eyebrow">Employee access</div>
-            <h2>Create account</h2>
-            <p>Register as an employee to submit support tickets.</p>
-        </div>
-        <form method="post" novalidate>
-            {{ form.hidden_tag() }}
-            <div class="form-floating mb-3">
-                {{ form.username(class="form-control", placeholder="Full name") }}
-                {{ form.username.label }}
-                {% for error in form.username.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-            </div>
-            <div class="form-floating mb-3">
-                {{ form.email(class="form-control", placeholder="name@company.com") }}
-                {{ form.email.label }}
-                {% for error in form.email.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-            </div>
-            <div class="form-floating password-wrap mb-3">
-                {{ form.password(class="form-control", placeholder="Minimum 8 characters") }}
-                {{ form.password.label }}
-                <button type="button" class="password-toggle" data-password-toggle aria-label="Show password">
-                    <i class="fa-regular fa-eye"></i>
-                </button>
-                {% for error in form.password.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-            </div>
-            <div class="form-floating password-wrap mb-3">
-                {{ form.confirm_password(class="form-control", placeholder="Repeat password") }}
-                {{ form.confirm_password.label }}
-                <button type="button" class="password-toggle" data-password-toggle aria-label="Show password">
-                    <i class="fa-regular fa-eye"></i>
-                </button>
-                {% for error in form.confirm_password.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-            </div>
-            <button type="submit" class="btn btn-primary btn-lg w-100"><i class="fa-solid fa-user-plus me-2"></i>Create Account</button>
-        </form>
-        <p class="text-center text-muted mt-4 mb-0">Already registered? <a href="{{ url_for('main.login') }}">Sign in</a></p>
-    </section>
+    </div>
 </div>
 {% endblock %}

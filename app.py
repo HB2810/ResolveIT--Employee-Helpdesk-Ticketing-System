@@ -2,6 +2,7 @@ from pathlib import Path
 
 from flask import Flask
 from flask_login import LoginManager
+from flask_mail import Mail
 from sqlalchemy import inspect
 
 from config import Config
@@ -10,6 +11,7 @@ from models.models import db, User
 from routes.routes import main_bp
 
 
+mail = Mail()
 login_manager = LoginManager()
 login_manager.login_view = "main.login"
 login_manager.login_message_category = "warning"
@@ -31,6 +33,7 @@ def create_app():
 
     db.init_app(app)
     login_manager.init_app(app)
+    mail.init_app(app)
     app.register_blueprint(main_bp)
 
     with app.app_context():

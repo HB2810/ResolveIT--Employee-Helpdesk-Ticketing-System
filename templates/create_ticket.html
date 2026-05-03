@@ -1,65 +1,75 @@
 {% extends "base.html" %}
 {% block title %}Create Ticket | ResolveIT{% endblock %}
 {% block content %}
-<div class="page-heading">
+<div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <div class="eyebrow">New support request</div>
-        <h1>Create Support Ticket</h1>
-        <p>Share the issue, priority, and optional evidence so support can act quickly.</p>
+        <h3 class="fw-bold mb-0">Create Support Ticket</h3>
+        <p class="text-muted mb-0">Submit a request to the IT operations team.</p>
     </div>
 </div>
 
-<div class="row g-4 justify-content-center">
+<div class="row g-4">
     <div class="col-lg-8">
-        <div class="content-panel">
-            <div class="support-tips mb-4">
-                <div><i class="fa-solid fa-network-wired"></i><span>Network</span></div>
-                <div><i class="fa-solid fa-laptop-code"></i><span>Device</span></div>
-                <div><i class="fa-solid fa-key"></i><span>Access</span></div>
-                <div><i class="fa-solid fa-cloud-arrow-up"></i><span>Evidence</span></div>
-            </div>
-            <form method="post" enctype="multipart/form-data" novalidate>
-                {{ form.hidden_tag() }}
-                <div class="mb-3">
-                    {{ form.title.label(class="form-label") }}
-                    {{ form.title(class="form-control", placeholder="Example: Laptop cannot connect to VPN") }}
-                    {% for error in form.title.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-                </div>
-                <div class="mb-3">
-                    {{ form.priority.label(class="form-label") }}
-                    {{ form.priority(class="form-select") }}
-                    {% for error in form.priority.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-                </div>
-                <div class="mb-4">
-                    {{ form.description.label(class="form-label") }}
-                    {{ form.description(class="form-control", rows="7", placeholder="Include device, location, error messages, and steps already tried.", data_counter="ticketDescriptionCounter") }}
-                    <div class="form-hint"><span id="ticketDescriptionCounter">0</span> characters added</div>
-                    {% for error in form.description.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-                </div>
-                <div class="mb-4 upload-dropzone">
-                    <div class="upload-icon"><i class="bi bi-cloud-arrow-up"></i></div>
-                    <div class="flex-grow-1">
-                        {{ form.attachment.label(class="form-label mb-1") }}
-                        <p class="form-hint mb-2">Optional. Attach a screenshot or short video of the issue. Supported: JPG, PNG, GIF, WEBP, MP4, MOV, WEBM.</p>
-                        {{ form.attachment(class="form-control") }}
+        <div class="card">
+            <div class="card-body p-4">
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        {{ form.title.label(class="form-label fw-medium") }}
+                        {{ form.title(class="form-control form-control-lg bg-light", placeholder="e.g. Laptop cannot connect to VPN") }}
+                        {% for error in form.title.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.priority.label(class="form-label fw-medium") }}
+                        {{ form.priority(class="form-select form-select-lg bg-light") }}
+                        {% for error in form.priority.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        {{ form.description.label(class="form-label fw-medium") }}
+                        {{ form.description(class="form-control bg-light", rows="6", placeholder="Describe the issue, device used, location, and steps already tried.") }}
+                        {% for error in form.description.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                    </div>
+                    
+                    <div class="mb-4 p-4 border rounded bg-light border-dashed">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="bg-white rounded-circle d-flex justify-content-center align-items-center shadow-sm me-3" style="width: 40px; height: 40px; color: var(--primary-color);">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                            </div>
+                            <div>
+                                {{ form.attachment.label(class="form-label fw-medium mb-0") }}
+                                <p class="text-muted small mb-0">Optional screenshot or video (JPG, PNG, GIF, MP4).</p>
+                            </div>
+                        </div>
+                        {{ form.attachment(class="form-control mt-2") }}
                         {% for error in form.attachment.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
                     </div>
-                </div>
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane me-2"></i>Submit Ticket</button>
-                    <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
-                </div>
-            </form>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg px-4"><i class="fa-solid fa-paper-plane me-2"></i>Submit Request</button>
+                        <a href="{{ url_for('main.dashboard') }}" class="btn btn-light btn-lg px-4 border">Cancel</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
+    
     <div class="col-lg-4">
-        <div class="content-panel operations-brief h-100">
-            <i class="fa-solid fa-lightbulb"></i>
-            <h2>Better tickets resolve faster</h2>
-            <p>Include the device, error message, impact, and what you already tried. Add a screenshot or short video when it helps.</p>
-            <div class="brief-grid">
-                <span><strong>1</strong> clear title</span>
-                <span><strong>2</strong> useful details</span>
+        <div class="card bg-primary text-white h-100 border-0" style="background: linear-gradient(145deg, var(--primary-color), var(--primary-hover));">
+            <div class="card-body p-4">
+                <div class="mb-4 text-white-50">
+                    <i class="fa-solid fa-lightbulb fa-3x"></i>
+                </div>
+                <h4 class="fw-bold text-white mb-3">Better tickets resolve faster</h4>
+                <p class="text-white-50 mb-4">Provide as much detail as possible to help our team diagnose and fix your problem quickly.</p>
+                <ul class="list-unstyled text-white-50">
+                    <li class="mb-3 d-flex align-items-center"><i class="fa-solid fa-check-circle me-3 text-white"></i> Include exact error messages</li>
+                    <li class="mb-3 d-flex align-items-center"><i class="fa-solid fa-check-circle me-3 text-white"></i> Describe what you already tried</li>
+                    <li class="mb-3 d-flex align-items-center"><i class="fa-solid fa-check-circle me-3 text-white"></i> Mention if it affects others</li>
+                    <li class="d-flex align-items-center"><i class="fa-solid fa-check-circle me-3 text-white"></i> Attach screenshots if visual</li>
+                </ul>
             </div>
         </div>
     </div>
