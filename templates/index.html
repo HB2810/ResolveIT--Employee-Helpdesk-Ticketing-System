@@ -1,18 +1,21 @@
 {% extends "base.html" %}
-{% block title %}ResolveIT | Support Ticketing{% endblock %}
+{% block title %}ResolveIT | Employee Helpdesk Ticketing System{% endblock %}
 {% block public_content %}
-<section class="py-5 bg-primary text-white rounded-4 shadow-sm mb-5 mt-3" style="background: linear-gradient(145deg, var(--primary-color), var(--primary-hover)) !important;">
+<section class="py-5 rounded-4 shadow mb-5 mt-3" style="background: linear-gradient(135deg, #0052cc 0%, #003a8c 100%);">
     <div class="container py-4">
         <div class="row align-items-center">
-            <div class="col-lg-6 mb-5 mb-lg-0">
-                <div class="d-inline-flex align-items-center bg-white bg-opacity-25 rounded-pill px-3 py-1 mb-4">
-                    <span class="badge bg-success rounded-pill me-2">Live</span>
-                    <small class="fw-medium text-white">Employee Helpdesk Ticketing System</small>
+            <div class="col-lg-6 mb-5 mb-lg-0 text-white">
+                <div class="mb-4">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="ResolveIT Logo" style="height: 80px; width: auto; filter: brightness(0) invert(1) drop-shadow(0 4px 8px rgba(0,0,0,0.3));" onerror="this.style.display='none'">
                 </div>
-                <h1 class="display-4 fw-bold mb-3">Resolve issues with clarity.</h1>
-                <p class="lead text-white-50 mb-5">A modern, secure helpdesk workspace. Submit IT requests with screenshots, track updates instantly, and let admins prioritize the most critical tasks.</p>
+                <div class="d-inline-flex align-items-center bg-white bg-opacity-10 rounded-pill px-3 py-1 mb-3 border border-white border-opacity-25">
+                    <span class="badge bg-success rounded-pill me-2" style="font-size:0.65rem;">● LIVE</span>
+                    <small class="fw-medium text-white" style="font-size:0.8rem;">Employee Helpdesk Ticketing System</small>
+                </div>
+                <h1 class="display-5 fw-bold mb-3" style="line-height: 1.2;">Resolve issues<br>with clarity.</h1>
+                <p class="lead mb-5" style="color: rgba(255,255,255,0.7); font-size: 1.05rem;">A modern, secure helpdesk workspace. Submit IT requests with screenshots, track updates instantly, and let admins prioritize the most critical tasks.</p>
                 <div class="d-flex flex-wrap gap-3">
-                    <a href="{{ url_for('main.login') }}" class="btn btn-light btn-lg px-4 fw-medium text-primary shadow-sm"><i class="fa-solid fa-arrow-right-to-bracket me-2"></i>Sign In</a>
+                    <a href="{{ url_for('main.login') }}" class="btn btn-light btn-lg px-4 fw-semibold text-primary shadow"><i class="fa-solid fa-arrow-right-to-bracket me-2"></i>Sign In</a>
                     <a href="{{ url_for('main.register') }}" class="btn btn-outline-light btn-lg px-4 fw-medium"><i class="fa-solid fa-user-plus me-2"></i>Create Account</a>
                 </div>
             </div>
@@ -21,31 +24,38 @@
                     <div class="card-header bg-light border-bottom-0 rounded-top-4 py-3 d-flex justify-content-between align-items-center">
                         <div class="fw-semibold"><i class="fa-solid fa-terminal me-2 text-primary"></i>Live Support Console</div>
                         <div class="d-flex gap-1">
-                            <span class="rounded-circle bg-danger" style="width:12px; height:12px;"></span>
-                            <span class="rounded-circle bg-warning" style="width:12px; height:12px;"></span>
-                            <span class="rounded-circle bg-success" style="width:12px; height:12px;"></span>
+                            <span class="rounded-circle bg-danger d-inline-block" style="width:12px; height:12px;"></span>
+                            <span class="rounded-circle bg-warning d-inline-block" style="width:12px; height:12px;"></span>
+                            <span class="rounded-circle bg-success d-inline-block" style="width:12px; height:12px;"></span>
                         </div>
                     </div>
                     <div class="card-body p-4">
                         <div class="d-flex align-items-start mb-4">
-                            <div class="bg-primary-light text-primary rounded-circle p-2 me-3"><i class="fa-solid fa-bolt fa-fw"></i></div>
+                            <div class="bg-primary-light rounded-3 p-2 me-3 d-flex align-items-center justify-content-center" style="width:42px;height:42px;"><i class="fa-solid fa-bolt fa-fw"></i></div>
                             <div>
                                 <h6 class="fw-bold mb-1">Ticket Pulse</h6>
                                 <p class="text-muted small mb-0">Urgency score for every request</p>
                             </div>
                         </div>
                         <div class="d-flex align-items-start mb-4">
-                            <div class="bg-success-light text-success rounded-circle p-2 me-3"><i class="fa-solid fa-camera fa-fw"></i></div>
+                            <div class="bg-success-light rounded-3 p-2 me-3 d-flex align-items-center justify-content-center" style="width:42px;height:42px;"><i class="fa-solid fa-camera fa-fw"></i></div>
                             <div>
                                 <h6 class="fw-bold mb-1">Visual Evidence</h6>
                                 <p class="text-muted small mb-0">Attach screenshots or videos</p>
                             </div>
                         </div>
-                        <div class="d-flex align-items-start mb-2">
-                            <div class="bg-warning-light text-warning rounded-circle p-2 me-3"><i class="fa-solid fa-shield-halved fa-fw"></i></div>
+                        <div class="d-flex align-items-start mb-4">
+                            <div class="bg-warning-light rounded-3 p-2 me-3 d-flex align-items-center justify-content-center" style="width:42px;height:42px;"><i class="fa-solid fa-shield-halved fa-fw"></i></div>
                             <div>
                                 <h6 class="fw-bold mb-1">Admin Control</h6>
                                 <p class="text-muted small mb-0">Status, priority, remarks, closure</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-start">
+                            <div class="bg-danger-light rounded-3 p-2 me-3 d-flex align-items-center justify-content-center" style="width:42px;height:42px;"><i class="fa-solid fa-bell fa-fw"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Email Alerts</h6>
+                                <p class="text-muted small mb-0">Instant notifications on updates</p>
                             </div>
                         </div>
                     </div>
@@ -58,30 +68,36 @@
 <div class="row g-4 mb-5">
     <div class="col-md-4">
         <div class="card border-0 shadow-sm h-100 p-4 hover-lift">
-            <div class="bg-primary-light text-primary rounded p-3 d-inline-block mb-4" style="width: fit-content;">
-                <i class="fa-solid fa-ticket fa-2x"></i>
+            <div class="bg-primary-light rounded-3 p-3 d-inline-flex align-items-center justify-content-center mb-4" style="width: 56px; height: 56px;">
+                <i class="fa-solid fa-ticket fa-lg"></i>
             </div>
-            <h4 class="fw-bold mb-3">Raise Tickets Fast</h4>
+            <h5 class="fw-bold mb-2">Raise Tickets Fast</h5>
             <p class="text-muted mb-0">Employees submit clear IT issues with priority, description, and optional evidence.</p>
         </div>
     </div>
     <div class="col-md-4">
         <div class="card border-0 shadow-sm h-100 p-4 hover-lift">
-            <div class="bg-success-light text-success rounded p-3 d-inline-block mb-4" style="width: fit-content;">
-                <i class="fa-solid fa-arrow-trend-up fa-2x"></i>
+            <div class="bg-success-light rounded-3 p-3 d-inline-flex align-items-center justify-content-center mb-4" style="width: 56px; height: 56px;">
+                <i class="fa-solid fa-arrow-trend-up fa-lg"></i>
             </div>
-            <h4 class="fw-bold mb-3">Smart Prioritization</h4>
+            <h5 class="fw-bold mb-2">Smart Prioritization</h5>
             <p class="text-muted mb-0">Ticket Pulse highlights active requests that need admin attention first.</p>
         </div>
     </div>
     <div class="col-md-4">
         <div class="card border-0 shadow-sm h-100 p-4 hover-lift">
-            <div class="bg-warning-light text-warning rounded p-3 d-inline-block mb-4" style="width: fit-content;">
-                <i class="fa-solid fa-list-check fa-2x"></i>
+            <div class="bg-warning-light rounded-3 p-3 d-inline-flex align-items-center justify-content-center mb-4" style="width: 56px; height: 56px;">
+                <i class="fa-solid fa-list-check fa-lg"></i>
             </div>
-            <h4 class="fw-bold mb-3">Clean Admin Flow</h4>
+            <h5 class="fw-bold mb-2">Clean Admin Flow</h5>
             <p class="text-muted mb-0">Search, filter, update, remark, and close tickets from one simple dashboard.</p>
         </div>
     </div>
 </div>
+
+<!-- Footer -->
+<footer class="text-center text-muted py-4 border-top">
+    <p class="mb-1"><strong>ResolveIT</strong> — Employee Helpdesk Ticketing System</p>
+    <p class="small mb-0">Need help? <a href="mailto:hetbhatt10@gmail.com" class="text-primary">Contact Support</a></p>
+</footer>
 {% endblock %}

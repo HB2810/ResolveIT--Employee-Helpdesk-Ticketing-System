@@ -1,10 +1,11 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent
 IS_VERCEL = bool(os.environ.get("VERCEL"))
-
 
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "change-this-secret-key-in-production")
@@ -16,6 +17,11 @@ class Config:
     UPLOAD_FOLDER = Path("/tmp/resolveit-uploads") if IS_VERCEL else BASE_DIR / "static" / "uploads"
     MAX_CONTENT_LENGTH = 25 * 1024 * 1024
     WTF_CSRF_ENABLED = True
+    
+    # Security Configuration
+    SESSION_COOKIE_SECURE = os.environ.get("FLASK_ENV") == "production"
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
 
     # Mail configuration
     MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.gmail.com")

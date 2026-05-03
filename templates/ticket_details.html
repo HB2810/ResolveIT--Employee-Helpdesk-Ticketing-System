@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Ticket #{{ ticket.id }} | ResolveIT{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
     <div>
-        <h3 class="fw-bold mb-0">Ticket #{{ ticket.id }}</h3>
-        <p class="text-muted mb-0">Created by {{ ticket.employee.username }} on {{ ticket.created_at.strftime("%b %d, %Y") }}</p>
+        <h3 class="fw-bold mb-1"><i class="fa-solid fa-ticket text-primary me-2"></i>Ticket #{{ ticket.id }}</h3>
+        <p class="text-muted mb-0">
+            <i class="fa-regular fa-user me-1"></i>{{ ticket.employee.username }} · 
+            <i class="fa-regular fa-clock me-1"></i>{{ ticket.created_at | to_ist }}
+        </p>
     </div>
     <a href="{{ url_for('main.manage_tickets') if current_user.is_admin else url_for('main.dashboard') }}" class="btn btn-outline-secondary">
         <i class="fa-solid fa-arrow-left me-2"></i>Back to Dashboard
@@ -13,70 +16,93 @@
 
 <div class="row g-4">
     <div class="col-lg-8">
-        <div class="card mb-4">
+        <!-- Ticket Header Card -->
+        <div class="card mb-4 overflow-hidden">
             <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-semibold">{{ ticket.title }}</h5>
-                <div>
+                <h5 class="mb-0 fw-semibold text-truncate me-3">{{ ticket.title }}</h5>
+                <div class="d-flex gap-2 flex-shrink-0">
                     {% if ticket.status == 'Open' %}
-                        <span class="badge rounded-pill bg-primary px-3 py-2">Open</span>
+                        <span class="badge rounded-pill bg-primary px-3 py-2"><i class="fa-regular fa-envelope-open me-1"></i>Open</span>
                     {% elif ticket.status == 'In Progress' %}
-                        <span class="badge rounded-pill bg-warning text-dark px-3 py-2">In Progress</span>
+                        <span class="badge rounded-pill bg-warning text-dark px-3 py-2"><i class="fa-solid fa-spinner me-1"></i>In Progress</span>
                     {% elif ticket.status == 'Resolved' %}
-                        <span class="badge rounded-pill bg-success px-3 py-2">Resolved</span>
+                        <span class="badge rounded-pill bg-success px-3 py-2"><i class="fa-solid fa-check me-1"></i>Resolved</span>
                     {% else %}
                         <span class="badge rounded-pill bg-secondary px-3 py-2">{{ ticket.status }}</span>
                     {% endif %}
                 </div>
             </div>
             <div class="card-body p-4">
-                <div class="row mb-4">
-                    <div class="col-md-4">
-                        <div class="p-3 bg-light rounded text-center h-100">
-                            <div class="text-muted small text-uppercase fw-bold mb-1">Priority</div>
-                            <div class="fw-bold fs-5 text-dark">{{ ticket.priority }}</div>
+                <!-- Quick Stats Row -->
+                <div class="row g-3 mb-4">
+                    <div class="col-4">
+                        <div class="p-3 rounded-3 text-center h-100" style="background: linear-gradient(135deg, rgba(0,82,204,0.05), rgba(0,82,204,0.1));">
+                            <div class="text-muted small text-uppercase fw-bold mb-1" style="font-size:0.7rem; letter-spacing:0.5px;">Priority</div>
+                            {% if ticket.priority == 'Critical' %}
+                                <span class="badge bg-danger px-3 py-2 fs-6">{{ ticket.priority }}</span>
+                            {% elif ticket.priority == 'High' %}
+                                <span class="badge bg-warning text-dark px-3 py-2 fs-6">{{ ticket.priority }}</span>
+                            {% else %}
+                                <span class="fw-bold fs-5 text-dark">{{ ticket.priority }}</span>
+                            {% endif %}
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="p-3 bg-light rounded text-center h-100">
-                            <div class="text-muted small text-uppercase fw-bold mb-1">Status</div>
+                    <div class="col-4">
+                        <div class="p-3 rounded-3 text-center h-100" style="background: linear-gradient(135deg, rgba(40,167,69,0.05), rgba(40,167,69,0.1));">
+                            <div class="text-muted small text-uppercase fw-bold mb-1" style="font-size:0.7rem; letter-spacing:0.5px;">Status</div>
                             <div class="fw-bold fs-5 text-dark">{{ ticket.status }}</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="p-3 bg-light rounded text-center h-100">
-                            <div class="text-muted small text-uppercase fw-bold mb-1">Age</div>
+                    <div class="col-4">
+                        <div class="p-3 rounded-3 text-center h-100" style="background: linear-gradient(135deg, rgba(255,193,7,0.05), rgba(255,193,7,0.1));">
+                            <div class="text-muted small text-uppercase fw-bold mb-1" style="font-size:0.7rem; letter-spacing:0.5px;">Age</div>
                             <div class="fw-bold fs-5 text-dark">{{ ticket.age_hours }}h</div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Description -->
                 <div class="mb-4">
-                    <h6 class="fw-bold text-uppercase text-muted mb-3"><i class="fa-solid fa-align-left me-2"></i>Description</h6>
-                    <div class="p-4 bg-light rounded border">
-                        <p class="mb-0 text-dark" style="white-space: pre-wrap;">{{ ticket.description }}</p>
+                    <h6 class="fw-bold text-uppercase text-muted mb-3" style="font-size:0.8rem; letter-spacing:0.5px;">
+                        <i class="fa-solid fa-align-left me-2 text-primary"></i>Description
+                    </h6>
+                    <div class="p-4 rounded-3 border" style="background: #fafbfc;">
+                        <p class="mb-0 text-dark" style="white-space: pre-wrap; line-height: 1.7;">{{ ticket.description }}</p>
                     </div>
                 </div>
 
+                <!-- Admin Remarks -->
                 <div class="mb-4">
-                    <h6 class="fw-bold text-uppercase text-muted mb-3"><i class="fa-solid fa-comment-dots me-2"></i>Admin Remarks</h6>
-                    <div class="p-4 rounded border {{ 'bg-primary-light border-primary border-opacity-25' if ticket.admin_remark else 'bg-light' }}">
-                        <p class="mb-0 {{ 'text-dark' if ticket.admin_remark else 'text-muted fst-italic' }}">{{ ticket.admin_remark or "No remarks added yet." }}</p>
+                    <h6 class="fw-bold text-uppercase text-muted mb-3" style="font-size:0.8rem; letter-spacing:0.5px;">
+                        <i class="fa-solid fa-comment-dots me-2 text-primary"></i>Admin Remarks
+                    </h6>
+                    {% if ticket.admin_remark %}
+                    <div class="p-4 rounded-3 border-start border-4 border-primary" style="background: linear-gradient(135deg, rgba(0,82,204,0.03), rgba(0,82,204,0.08));">
+                        <p class="mb-0 text-dark" style="line-height: 1.7;">{{ ticket.admin_remark }}</p>
                     </div>
+                    {% else %}
+                    <div class="p-4 rounded-3 border" style="background: #fafbfc;">
+                        <p class="mb-0 text-muted fst-italic"><i class="fa-regular fa-clock me-2"></i>No remarks added yet.</p>
+                    </div>
+                    {% endif %}
                 </div>
 
+                <!-- Attachment -->
                 {% if ticket.has_attachment %}
                 <div>
-                    <h6 class="fw-bold text-uppercase text-muted mb-3"><i class="fa-solid fa-paperclip me-2"></i>Attached Evidence</h6>
-                    <div class="p-3 bg-light rounded border text-center">
+                    <h6 class="fw-bold text-uppercase text-muted mb-3" style="font-size:0.8rem; letter-spacing:0.5px;">
+                        <i class="fa-solid fa-paperclip me-2 text-primary"></i>Attached Evidence
+                    </h6>
+                    <div class="p-3 rounded-3 border text-center" style="background: #fafbfc;">
                         {% if ticket.attachment_is_image %}
-                            <img src="{{ url_for('main.uploaded_file', filename=ticket.attachment_filename) }}" alt="{{ ticket.attachment_original_name }}" class="img-fluid rounded shadow-sm mb-3" style="max-height: 300px;">
+                            <img src="{{ url_for('main.uploaded_file', filename=ticket.attachment_filename) }}" alt="{{ ticket.attachment_original_name }}" class="img-fluid rounded-3 shadow-sm mb-3" style="max-height: 350px;">
                         {% elif ticket.attachment_is_video %}
-                            <video controls class="img-fluid rounded shadow-sm mb-3" style="max-height: 300px;">
+                            <video controls class="img-fluid rounded-3 shadow-sm mb-3" style="max-height: 350px;">
                                 <source src="{{ url_for('main.uploaded_file', filename=ticket.attachment_filename) }}">
                             </video>
                         {% endif %}
                         <div class="mt-2">
-                            <a class="btn btn-sm btn-outline-primary" href="{{ url_for('main.uploaded_file', filename=ticket.attachment_filename) }}" target="_blank" rel="noopener">
+                            <a class="btn btn-sm btn-outline-primary rounded-pill px-3" href="{{ url_for('main.uploaded_file', filename=ticket.attachment_filename) }}" target="_blank" rel="noopener">
                                 <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>View Full Size ({{ ticket.attachment_original_name }})
                             </a>
                         </div>
@@ -89,24 +115,24 @@
 
     {% if current_user.is_admin %}
     <div class="col-lg-4">
-        <div class="card sticky-top" style="top: 88px;">
-            <div class="card-header bg-white border-bottom py-3">
-                <h5 class="mb-0 fw-semibold"><i class="fa-solid fa-pen-to-square me-2 text-primary"></i>Update Ticket</h5>
+        <div class="card sticky-top border-0 shadow" style="top: 88px;">
+            <div class="card-header border-bottom py-3" style="background: linear-gradient(135deg, #0052cc, #0043a6);">
+                <h5 class="mb-0 fw-semibold text-white"><i class="fa-solid fa-pen-to-square me-2"></i>Update Ticket</h5>
             </div>
             <div class="card-body p-4">
                 <form method="post" action="{{ url_for('main.update_ticket', ticket_id=ticket.id) }}" novalidate>
                     {{ form.hidden_tag() }}
                     <div class="mb-3">
-                        {{ form.status.label(class="form-label fw-medium") }}
-                        {{ form.status(class="form-select bg-light") }}
+                        {{ form.status.label(class="form-label fw-medium small text-uppercase text-muted") }}
+                        {{ form.status(class="form-select") }}
                     </div>
                     <div class="mb-3">
-                        {{ form.priority.label(class="form-label fw-medium") }}
-                        {{ form.priority(class="form-select bg-light") }}
+                        {{ form.priority.label(class="form-label fw-medium small text-uppercase text-muted") }}
+                        {{ form.priority(class="form-select") }}
                     </div>
                     <div class="mb-4">
-                        {{ form.admin_remark.label(class="form-label fw-medium") }}
-                        {{ form.admin_remark(class="form-control bg-light", rows="5", placeholder="Add notes, solutions, or follow-up questions for the employee.") }}
+                        {{ form.admin_remark.label(class="form-label fw-medium small text-uppercase text-muted") }}
+                        {{ form.admin_remark(class="form-control", rows="5", placeholder="Add notes, solutions, or follow-up questions...") }}
                     </div>
                     <button type="submit" class="btn btn-primary w-100 btn-lg"><i class="fa-solid fa-floppy-disk me-2"></i>Save Changes</button>
                 </form>

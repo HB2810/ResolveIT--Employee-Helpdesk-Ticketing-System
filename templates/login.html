@@ -1,33 +1,58 @@
 {% extends "base.html" %}
 {% block title %}Login | ResolveIT{% endblock %}
 {% block public_content %}
-<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
-    <div class="col-md-6 col-lg-5">
-        <div class="card shadow border-0 rounded-3">
-            <div class="card-body p-5">
-                <div class="text-center mb-4">
-                    <div class="bg-primary-light text-primary rounded-circle d-inline-flex justify-content-center align-items-center mb-3" style="width: 60px; height: 60px;">
-                        <i class="fa-solid fa-headset fa-2x"></i>
+<div class="row justify-content-center align-items-center" style="min-height: 75vh;">
+    <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="row g-0">
+                <!-- Left Panel - Branding -->
+                <div class="col-lg-5 d-none d-lg-flex flex-column justify-content-center align-items-center text-white p-5" style="background: linear-gradient(145deg, #0052cc, #003180);">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="ResolveIT" style="height: 55px; filter: brightness(0) invert(1); margin-bottom: 24px;" onerror="this.style.display='none'">
+                    <h4 class="fw-bold text-center mb-3">Welcome to ResolveIT</h4>
+                    <p class="text-center mb-0" style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Your modern, secure helpdesk workspace for fast IT issue resolution.</p>
+                    <div class="mt-4 pt-4 border-top w-100" style="border-color: rgba(255,255,255,0.15) !important;">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fa-solid fa-shield-halved me-3" style="color: rgba(255,255,255,0.6);"></i>
+                            <small style="color: rgba(255,255,255,0.7);">Enterprise-grade security</small>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fa-solid fa-bolt me-3" style="color: rgba(255,255,255,0.6);"></i>
+                            <small style="color: rgba(255,255,255,0.7);">Real-time live updates</small>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fa-solid fa-envelope me-3" style="color: rgba(255,255,255,0.6);"></i>
+                            <small style="color: rgba(255,255,255,0.7);">Instant email notifications</small>
+                        </div>
                     </div>
-                    <h3 class="fw-bold">Welcome back</h3>
-                    <p class="text-muted">Sign in to your ResolveIT workspace.</p>
                 </div>
-                <form method="post" novalidate>
-                    {{ form.hidden_tag() }}
-                    <div class="form-floating mb-3">
-                        {{ form.email(class="form-control", placeholder="name@company.com") }}
-                        {{ form.email.label }}
-                        {% for error in form.email.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                <!-- Right Panel - Form -->
+                <div class="col-lg-7">
+                    <div class="p-4 p-md-5">
+                        <div class="text-center mb-4">
+                            <div class="bg-primary-light text-primary rounded-circle d-inline-flex justify-content-center align-items-center mb-3" style="width: 56px; height: 56px;">
+                                <i class="fa-solid fa-arrow-right-to-bracket fa-xl"></i>
+                            </div>
+                            <h3 class="fw-bold mb-1">Sign In</h3>
+                            <p class="text-muted small">Enter your credentials to continue</p>
+                        </div>
+                        <form method="post" novalidate>
+                            {{ form.hidden_tag() }}
+                            <div class="form-floating mb-3">
+                                {{ form.email(class="form-control form-control-lg", placeholder="name@company.com") }}
+                                {{ form.email.label }}
+                                {% for error in form.email.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                            </div>
+                            <div class="form-floating mb-4">
+                                {{ form.password(class="form-control form-control-lg", placeholder="Password") }}
+                                {{ form.password.label }}
+                                {% for error in form.password.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg w-100 mb-3"><i class="fa-solid fa-arrow-right-to-bracket me-2"></i>Sign In</button>
+                        </form>
+                        <div class="text-center mt-3">
+                            <p class="text-muted mb-0 small">New employee? <a href="{{ url_for('main.register') }}" class="text-primary text-decoration-none fw-semibold">Create an account</a></p>
+                        </div>
                     </div>
-                    <div class="form-floating mb-4">
-                        {{ form.password(class="form-control", placeholder="Password") }}
-                        {{ form.password.label }}
-                        {% for error in form.password.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-lg w-100"><i class="fa-solid fa-arrow-right-to-bracket me-2"></i>Sign In</button>
-                </form>
-                <div class="text-center mt-4">
-                    <p class="text-muted mb-0">New employee? <a href="{{ url_for('main.register') }}" class="text-primary text-decoration-none fw-medium">Create an account</a></p>
                 </div>
             </div>
         </div>

@@ -3,34 +3,39 @@
 :root {
     --primary-color: #0052cc;
     --primary-hover: #0043a6;
-    --bg-color: #f8f9fa;
+    --bg-color: #f4f6f9;
     --card-bg: #ffffff;
     --sidebar-bg: #ffffff;
     --sidebar-width: 260px;
     --navbar-height: 64px;
-    --text-main: #333333;
+    --text-main: #1a1a2e;
     --text-muted: #6c757d;
-    --border-color: #eaedf2;
-    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-    --shadow-hover: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+    --border-color: #e8ecf1;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -1px rgba(0,0,0,0.04);
+    --shadow-hover: 0 10px 25px -5px rgba(0,0,0,0.1), 0 4px 10px -3px rgba(0,0,0,0.05);
+    --radius: 12px;
 }
 
+* { box-sizing: border-box; }
+
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: var(--bg-color);
     color: var(--text-main);
     overflow-x: hidden;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Layout */
+/* ========== Layout ========== */
 .wrapper {
     display: flex;
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
 }
 
-/* Sidebar */
+/* ========== Sidebar ========== */
 .sidebar {
     width: var(--sidebar-width);
     background-color: var(--sidebar-bg);
@@ -39,8 +44,10 @@ body {
     flex-direction: column;
     height: 100vh;
     position: fixed;
-    z-index: 1000;
-    transition: all 0.3s;
+    top: 0;
+    left: 0;
+    z-index: 1040;
+    transition: transform 0.3s ease;
 }
 
 .sidebar-header {
@@ -49,49 +56,74 @@ body {
     align-items: center;
     padding: 0 20px;
     border-bottom: 1px solid var(--border-color);
-    font-weight: 700;
-    font-size: 1.25rem;
-    color: var(--primary-color);
+}
+
+.sidebar-logo {
+    height: 38px;
+    width: auto;
+    object-fit: contain;
 }
 
 .sidebar-menu {
-    padding: 20px 0;
+    padding: 16px 0;
     flex-grow: 1;
 }
 
 .sidebar-menu a {
     display: flex;
     align-items: center;
-    padding: 12px 24px;
+    padding: 11px 24px;
     color: var(--text-muted);
     text-decoration: none;
     font-weight: 500;
-    transition: all 0.2s;
+    font-size: 0.92rem;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
 }
 
-.sidebar-menu a:hover, .sidebar-menu a.active {
+.sidebar-menu a:hover {
     color: var(--primary-color);
-    background-color: rgba(0, 82, 204, 0.05);
-    border-right: 3px solid var(--primary-color);
+    background-color: rgba(0, 82, 204, 0.04);
+}
+
+.sidebar-menu a.active {
+    color: var(--primary-color);
+    background-color: rgba(0, 82, 204, 0.06);
+    border-left-color: var(--primary-color);
+    font-weight: 600;
 }
 
 .sidebar-menu a i {
     margin-right: 12px;
-    font-size: 1.1rem;
-    width: 20px;
+    font-size: 1.05rem;
+    width: 22px;
     text-align: center;
 }
 
-/* Main Content */
+/* Sidebar Overlay (Mobile) */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 1035;
+    transition: opacity 0.3s;
+}
+.sidebar-overlay.active {
+    display: block;
+}
+
+/* ========== Main Content ========== */
 .main-content {
     flex-grow: 1;
     margin-left: var(--sidebar-width);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    width: calc(100% - var(--sidebar-width));
 }
 
-/* Navbar */
+/* ========== Navbar ========== */
 .top-navbar {
     height: var(--navbar-height);
     background-color: var(--card-bg);
@@ -102,46 +134,53 @@ body {
     padding: 0 24px;
     position: sticky;
     top: 0;
-    z-index: 999;
+    z-index: 1030;
     box-shadow: var(--shadow-sm);
 }
 
-/* Cards */
+/* ========== Cards ========== */
 .card {
     border: none;
-    border-radius: 12px;
+    border-radius: var(--radius);
     box-shadow: var(--shadow-sm);
     background-color: var(--card-bg);
-    transition: box-shadow 0.3s, transform 0.2s;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
 
 .card:hover {
     box-shadow: var(--shadow-md);
 }
 
+.hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+}
+
 .stat-card {
-    padding: 20px;
+    padding: 22px;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
 .stat-card .icon-box {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
+    width: 50px;
+    height: 50px;
+    border-radius: var(--radius);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
 }
 
-.bg-primary-light { background-color: rgba(0,82,204,0.1); color: var(--primary-color); }
-.bg-success-light { background-color: rgba(40,167,69,0.1); color: #28a745; }
-.bg-warning-light { background-color: rgba(255,193,7,0.1); color: #d39e00; }
-.bg-danger-light { background-color: rgba(220,53,69,0.1); color: #dc3545; }
+/* ========== Color Helpers ========== */
+.bg-primary-light { background-color: rgba(0,82,204,0.1) !important; color: var(--primary-color) !important; }
+.bg-success-light { background-color: rgba(40,167,69,0.1) !important; color: #28a745 !important; }
+.bg-warning-light { background-color: rgba(255,193,7,0.1) !important; color: #d39e00 !important; }
+.bg-danger-light  { background-color: rgba(220,53,69,0.1) !important; color: #dc3545 !important; }
+.bg-info-light    { background-color: rgba(13,202,240,0.1) !important; color: #0dcaf0 !important; }
 
-/* Tables */
+/* ========== Tables ========== */
 .table-custom {
     vertical-align: middle;
 }
@@ -150,14 +189,18 @@ body {
     color: var(--text-muted);
     font-weight: 600;
     text-transform: uppercase;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     letter-spacing: 0.5px;
+    padding: 14px 12px;
+}
+.table-custom tbody tr {
+    transition: background-color 0.15s;
 }
 .table-custom tbody tr:hover {
-    background-color: rgba(0,0,0,0.02);
+    background-color: rgba(0,82,204,0.02);
 }
 
-/* Buttons */
+/* ========== Buttons ========== */
 .btn-primary {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
@@ -167,43 +210,50 @@ body {
     border-color: var(--primary-hover);
 }
 .btn {
-    border-radius: 6px;
+    border-radius: 8px;
     font-weight: 500;
-    padding: 8px 16px;
-    transition: all 0.2s;
+    padding: 8px 18px;
+    transition: all 0.2s ease;
 }
 
-/* Forms */
+/* ========== Forms ========== */
 .form-control, .form-select {
     border-radius: 8px;
     border: 1px solid var(--border-color);
     padding: 10px 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 .form-control:focus, .form-select:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(0, 82, 204, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(0, 82, 204, 0.15);
 }
 .form-floating > label {
     padding-left: 14px;
 }
 
-/* Badges */
+/* ========== Badges ========== */
 .badge {
     padding: 6px 10px;
     font-weight: 500;
+    font-size: 0.78rem;
 }
 
-/* Animations */
+/* ========== Animations ========== */
 .slide-in {
     animation: slideIn 0.3s ease-out forwards;
 }
 
 @keyframes slideIn {
     from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Toasts Container */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* ========== Toasts Container ========== */
 #toast-container {
     position: fixed;
     top: 80px;
@@ -211,12 +261,23 @@ body {
     z-index: 1055;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* ========== Responsive ========== */
+@media (max-width: 767.98px) {
     .sidebar {
         transform: translateX(-100%);
     }
+    .sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+    }
     .main-content {
         margin-left: 0;
+        width: 100%;
+    }
+}
+
+@media (min-width: 768px) {
+    .sidebar-overlay {
+        display: none !important;
     }
 }

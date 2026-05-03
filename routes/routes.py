@@ -162,10 +162,10 @@ def create_ticket():
         
         # Send email notification to admin
         try:
-            from app import mail
+            mail = current_app.extensions['mail']
             msg = Message(
                 subject=f"New Ticket Created: {ticket.title}",
-                recipients=["hetbhatt@gmail.com"],
+                recipients=["hetbhatt10@gmail.com"],
                 html=f"""
                 <div style="font-family: Arial, sans-serif; color: #333;">
                     <h2>New Support Ticket Created</h2>
@@ -271,7 +271,7 @@ def update_ticket(ticket_id):
         
         # Send email to user
         try:
-            from app import mail
+            mail = current_app.extensions['mail']
             msg = Message(
                 subject=f"Ticket Status Updated: {ticket.title}",
                 recipients=[ticket.employee.email],

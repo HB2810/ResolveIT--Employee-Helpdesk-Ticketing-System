@@ -3,6 +3,9 @@ from pathlib import Path
 from flask import Flask
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_talisman import Talisman
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from sqlalchemy import inspect
 
 from config import Config
@@ -15,6 +18,9 @@ mail = Mail()
 login_manager = LoginManager()
 login_manager.login_view = "main.login"
 login_manager.login_message_category = "warning"
+
+talisman = Talisman()
+limiter = Limiter(key_func=get_remote_address, default_limits=["200 per day", "50 per hour"])
 
 
 @login_manager.user_loader
@@ -34,7 +40,33 @@ def create_app():
     db.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
+    
+    # Initialize security headers (only enforce in production)
+    if not app.debug:
+        csp = {
+            'default-src': ["'self'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com", "https://fonts.gstatic.com"],
+            'script-src': ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+            'style-src': ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com"],
+            'img-src': ["'self'", "data:"],
+            'font-src': ["'self'", "https://cdnjs.cloudflare.com", "https://fonts.gstatic.com"]
+        }
+        talisman.init_app(app, content_security_policy=csp, force_https=False)
+    
+    limiter.init_app(app)
+    
     app.register_blueprint(main_bp)
+
+    # Custom Jinja filter: convert UTC datetime to IST
+    from datetime import timedelta, timezone as tz
+    IST = tz(timedelta(hours=5, minutes=30))
+    
+    @app.template_filter('to_ist')
+    def to_ist_filter(dt):
+        if dt is None:
+            return ''
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=tz.utc)
+        return dt.astimezone(IST).strftime("%b %d, %Y, %I:%M %p")
 
     with app.app_context():
         db.create_all()

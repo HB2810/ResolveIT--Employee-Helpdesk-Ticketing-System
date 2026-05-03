@@ -121,7 +121,7 @@
                             <span class="badge rounded-pill bg-secondary">{{ ticket.status }}</span>
                         {% endif %}
                     </td>
-                    <td class="text-muted small">{{ ticket.created_at.strftime("%b %d, %Y, %I:%M %p") }}</td>
+                    <td class="text-muted small">{{ ticket.created_at | to_ist }}</td>
                     <td class="text-end pe-4">
                         <a href="{{ url_for('main.ticket_details', ticket_id=ticket.id) }}" class="btn btn-sm btn-outline-primary">Manage</a>
                     </td>
