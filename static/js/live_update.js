@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const tbody = document.getElementById('tickets-table-body');
                     if (tbody) {
                         tbody.innerHTML = '';
+                        const isAdmin = window.location.pathname.includes('/admin');
                         data.tickets.forEach(t => {
                             const dateStr = new Date(t.created_at).toLocaleString(undefined, {
                                 year: 'numeric', month: 'short', day: 'numeric',
@@ -56,16 +57,31 @@ document.addEventListener('DOMContentLoaded', () => {
                             
                             const tr = document.createElement('tr');
                             tr.className = 'align-middle slide-in';
-                            tr.innerHTML = `
-                                <td><span class="badge bg-light text-dark border">#${t.id}</span></td>
-                                <td class="fw-bold">${t.title}</td>
-                                <td><span class="badge rounded-pill ${getPriorityBadgeClass(t.priority)}">${t.priority}</span></td>
-                                <td><span class="badge rounded-pill ${getStatusBadgeClass(t.status)}">${t.status}</span></td>
-                                <td class="text-muted small">${dateStr}</td>
-                                <td>
-                                    <a href="/tickets/${t.id}" class="btn btn-sm btn-outline-primary">View</a>
-                                </td>
-                            `;
+                            
+                            if (isAdmin) {
+                                tr.innerHTML = `
+                                    <td class="ps-4"><span class="badge bg-light text-dark border">#${t.id}</span></td>
+                                    <td><div class="fw-medium text-dark">${t.username}</div></td>
+                                    <td class="fw-bold">${t.title}</td>
+                                    <td><span class="badge rounded-pill ${getPriorityBadgeClass(t.priority)}">${t.priority}</span></td>
+                                    <td><span class="badge rounded-pill ${getStatusBadgeClass(t.status)}">${t.status}</span></td>
+                                    <td class="text-muted small">${dateStr}</td>
+                                    <td class="text-end pe-4">
+                                        <a href="/tickets/${t.id}" class="btn btn-sm btn-outline-primary">Manage</a>
+                                    </td>
+                                `;
+                            } else {
+                                tr.innerHTML = `
+                                    <td class="ps-4"><span class="badge bg-light text-dark border">#${t.id}</span></td>
+                                    <td class="fw-bold">${t.title}</td>
+                                    <td><span class="badge rounded-pill ${getPriorityBadgeClass(t.priority)}">${t.priority}</span></td>
+                                    <td><span class="badge rounded-pill ${getStatusBadgeClass(t.status)}">${t.status}</span></td>
+                                    <td class="text-muted small">${dateStr}</td>
+                                    <td class="text-end pe-4">
+                                        <a href="/tickets/${t.id}" class="btn btn-sm btn-outline-primary">View</a>
+                                    </td>
+                                `;
+                            }
                             tbody.appendChild(tr);
                         });
                     }
