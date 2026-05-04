@@ -11,15 +11,21 @@ from werkzeug.utils import secure_filename
 from forms.forms import LoginForm, RegistrationForm, TicketForm, TicketUpdateForm
 from models.models import Ticket, User, db
 from threading import Thread
+import traceback
 
 def send_async_email(app, msg):
     with app.app_context():
         try:
+            with open("email_debug.log", "a") as f:
+                f.write(f"Attempting to send email to {msg.recipients}...\n")
             mail = app.extensions.get('mail')
             if mail:
                 mail.send(msg)
+                with open("email_debug.log", "a") as f:
+                    f.write(f"Email sent successfully to {msg.recipients}!\n")
         except Exception as e:
-            print(f"Failed to send email asynchronously: {e}")
+            with open("email_debug.log", "a") as f:
+                f.write(f"Failed to send email to {msg.recipients}: {e}\n{traceback.format_exc()}\n")
 
 
 main_bp = Blueprint("main", __name__)
