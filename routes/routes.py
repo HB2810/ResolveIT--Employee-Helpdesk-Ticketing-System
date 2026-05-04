@@ -10,6 +10,16 @@ from werkzeug.utils import secure_filename
 
 from forms.forms import LoginForm, RegistrationForm, TicketForm, TicketUpdateForm
 from models.models import Ticket, User, db
+from threading import Thread
+
+def send_async_email(app, msg):
+    with app.app_context():
+        try:
+            mail = app.extensions.get('mail')
+            if mail:
+                mail.send(msg)
+        except Exception as e:
+            print(f"Failed to send email asynchronously: {e}")
 
 
 main_bp = Blueprint("main", __name__)
@@ -162,7 +172,6 @@ def create_ticket():
         
         # Send email notification to admin
         try:
-            mail = current_app.extensions['mail']
             msg = Message(
                 subject=f"New Ticket Created: {ticket.title}",
                 recipients=["hetbhatt10@gmail.com"],
@@ -180,9 +189,9 @@ def create_ticket():
                 </div>
                 """
             )
-            mail.send(msg)
+            Thread(target=send_async_email, args=(current_app._get_current_object(), msg)).start()
         except Exception as e:
-            print(f"Failed to send email: {e}")
+            print(f"Failed to queue email: {e}")
 
         flash("Your support ticket has been created.", "success")
         return redirect(url_for("main.ticket_details", ticket_id=ticket.id))
@@ -271,7 +280,6 @@ def update_ticket(ticket_id):
         
         # Send email to user
         try:
-            mail = current_app.extensions['mail']
             msg = Message(
                 subject=f"Ticket Status Updated: {ticket.title}",
                 recipients=[ticket.employee.email],
@@ -288,9 +296,9 @@ def update_ticket(ticket_id):
                 </div>
                 """
             )
-            mail.send(msg)
+            Thread(target=send_async_email, args=(current_app._get_current_object(), msg)).start()
         except Exception as e:
-            print(f"Failed to send email: {e}")
+            print(f"Failed to queue email: {e}")
 
         flash("Ticket updated successfully.", "success")
     else:
