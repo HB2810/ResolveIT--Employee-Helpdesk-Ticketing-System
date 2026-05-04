@@ -12,20 +12,50 @@ from forms.forms import LoginForm, RegistrationForm, TicketForm, TicketUpdateFor
 from models.models import Ticket, User, db
 from threading import Thread
 import traceback
+import os
+import requests
 
 def send_async_email(app, msg):
     with app.app_context():
         try:
             with open("email_debug.log", "a") as f:
-                f.write(f"Attempting to send email to {msg.recipients}...\n")
-            mail = app.extensions.get('mail')
-            if mail:
-                mail.send(msg)
+                f.write(f"Attempting to send email via API to {msg.recipients}...\n")
+            
+            # Using Resend API (HTTP POST over port 443) to bypass Render's SMTP block
+            api_key = os.environ.get("RESEND_API_KEY")
+            if not api_key:
                 with open("email_debug.log", "a") as f:
-                    f.write(f"Email sent successfully to {msg.recipients}!\n")
+                    f.write("Error: RESEND_API_KEY is not set in environment variables.\n")
+                print("Error: RESEND_API_KEY not set. Cannot send email.")
+                return
+
+            headers = {
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json"
+            }
+            
+            # Use the default sender or onboarding@resend.dev (Resend's default testing domain)
+            sender = os.environ.get("MAIL_DEFAULT_SENDER", "onboarding@resend.dev")
+            
+            data = {
+                "from": sender,
+                "to": msg.recipients,
+                "subject": msg.subject,
+                "html": msg.html
+            }
+            
+            response = requests.post("https://api.resend.com/emails", headers=headers, json=data, timeout=15)
+            
+            if response.ok:
+                with open("email_debug.log", "a") as f:
+                    f.write(f"Email sent successfully via API to {msg.recipients}! Response ID: {response.json().get('id')}\n")
+            else:
+                with open("email_debug.log", "a") as f:
+                    f.write(f"API Error: {response.status_code} - {response.text}\n")
+                    
         except Exception as e:
             with open("email_debug.log", "a") as f:
-                f.write(f"Failed to send email to {msg.recipients}: {e}\n{traceback.format_exc()}\n")
+                f.write(f"Exception sending email to {msg.recipients}: {e}\n{traceback.format_exc()}\n")
 
 
 main_bp = Blueprint("main", __name__)
